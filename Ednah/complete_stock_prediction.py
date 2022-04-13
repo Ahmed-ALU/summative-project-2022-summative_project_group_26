@@ -8,11 +8,29 @@ from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, LSTM
 
+"""
+Here are the columns:
+
+Open - the price the stock opened at.
+
+High - the highest price during the day
+
+Low - the lowest price during the day
+
+Close - the closing price on the trading day
+
+Volume - how many shares were traded
+
+Stock doesn't trade every day (there is no trading on weekends and holidays), so some dates are missing.
+"""
+
 
 def stock_price_prediction():
+
     viable_companies = ['FB', 'AMZN', 'AAPL', 'NFLX', 'GOOG']
     while True:
-        company = input("Enter the company you want to see tomorrow's price prediction: ").replace(" ", "")
+        #to make user's input resemble the options we have
+        company = input("Enter the company you want to see tomorrow's price prediction: ").replace(" ", "").upper()
         if company not in viable_companies:
             print("Please choose a company among the following:")
             print(f'{viable_companies}')
@@ -20,8 +38,7 @@ def stock_price_prediction():
             break
     # when to start the data
     start = dt.datetime(2013, 1, 1)
-    end = dt.datetime.now()
-    # end = dt.datetime(2020,1,1)
+    end = dt.datetime(2020,1,1)
     data = web.DataReader(company, 'yahoo', start, end)
     #     data
     # Prepare data
@@ -67,6 +84,7 @@ def stock_price_prediction():
 
     # load some test data
     # has to be data that the model has not seen before
+    #so we will use from 2020 to now since we used 2013 to 2020 to train
     test_start = dt.datetime(2020, 1, 1)
     test_end = dt.datetime.now()
 
@@ -80,6 +98,7 @@ def stock_price_prediction():
     model_inputs = model_inputs.reshape(-1, 1)
     # scale down using scaler we defined
     model_inputs = scaler.transform(model_inputs)
+
     # make predictions
 
     x_test = []
@@ -96,6 +115,8 @@ def stock_price_prediction():
     # plot the test predictions
     plt.plot(actual_price, color='blue', label=f"Actual {company} Price")
     plt.plot(predicted_prices, color='green', label=f"Predicted {company} Price")
+
+
 
     plt.title(f"{company} Share Price")
     plt.xlabel('Time')
