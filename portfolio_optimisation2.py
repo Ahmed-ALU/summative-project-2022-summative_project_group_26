@@ -1,5 +1,9 @@
+from lib2to3.pytree import Base
+from tkinter import *
+
+
 class portfolio_optimization:
-    def __init__(self):
+    def __init__(self, assets, money_to_be_invested):
         import yfinance as yf
         import pandas as pd
         from datetime import datetime
@@ -8,10 +12,14 @@ class portfolio_optimization:
 
         self.dummy_assets = ['FB', 'AMZN', 'AAPL', 'NFLX', 'GOOG']
         print(f"dummy assets:{self.dummy_assets}")
-
-        self.assets = input(
-            "Enter the symbols of the companies you want to invest in:\nYou may choose from list above\n").split()
-        self.money_to_be_invested = int(input("Enter the money to invest\n"))
+        label = Label(window)
+        ###################
+        self.assets = assets
+        self.money_to_be_invested = money_to_be_invested
+        ###################
+        # self.assets = input(
+        #     "Enter the symbols of the companies you want to invest in:\nYou may choose from list above\n").split()
+        # self.money_to_be_invested = int(input("Enter the money to invest\n"))
         stocksStartDate = '2013-01-01'
         today = datetime.today().strftime('%Y-%m-%d')
         self.all_stocks = pd.DataFrame()
@@ -43,7 +51,7 @@ class portfolio_optimization:
 
         company_dict={"companies":comprehensive_list_of_companies,"symbols":comprehensive_list_of_symbols}
         Visual_list_of_companies=pd.DataFrame(company_dict)
-        print(Visual_list_of_companies)
+        return(Visual_list_of_companies)
         #
 
     def stock_optimisation_trial_graph(self):
@@ -94,8 +102,8 @@ class portfolio_optimization:
         print("Below are is the optimized portfolio")
 
 
-        print(pd.DataFrame(optimized_assets))
-        print('Funds remaining: ${:.2f}'.format(leftover))
+        return(pd.DataFrame(optimized_assets)), ('Funds remaining: ${:.2f}'.format(leftover))
+        
 
     def knapsgack_implementation(self):
         from pypfopt.efficient_frontier import EfficientFrontier
@@ -124,7 +132,7 @@ class portfolio_optimization:
             number_of_stocks.append(no_of_stocks)
         optimized_assets = {"company": companies, "number of stocks": number_of_stocks}
         self.knapsack_algorithm(self.stock_owning_limit,weight_limits,latest_prices,len(self.assets))
-        print(self.b)
+        return self.b
 
     def knapsack_algorithm(self,W, wt, val, n):
             K = [[0 for w in range(W + 1)]
@@ -155,11 +163,58 @@ class portfolio_optimization:
                     max_value = max_value - val[i - 1]
                     w = w - wt[i - 1]
 
+    
 
-
-if '__main__'==__name__:
-    sample_optimisation=portfolio_optimization()
-    sample_optimisation.full_list_of_companies()
-    sample_optimisation.stock_optimisation_trial_graph()
-    sample_optimisation.portfolio_optimisation()
+# if '__main__'==__name__:
+#     sample_optimisation=portfolio_optimization()
+    # sample_optimisation.full_list_of_companies()
+    # sample_optimisation.stock_optimisation_trial_graph()
+    # sample_optimisation.portfolio_optimisation()
+    # sample_optimisation.gui()
     #sample_optimisation.knapsack_implementation()
+
+
+def gui():
+
+    def implement():
+        input1Value=input1.get("1.0","end-1c")
+        input2Value=int(input2.get("1.0","end-1c"))
+        sample_optimisation=portfolio_optimization(input1Value, input2Value)
+        result1 = sample_optimisation.full_list_of_companies()
+        sample_optimisation.stock_optimisation_trial_graph()
+        result2 = sample_optimisation.portfolio_optimisation()
+        sample_optimisation.gui()
+        
+        try:
+            text.insert(INSERT, result2)
+        except BaseException as error:
+            print(error)
+            print (result2)
+
+    window = Tk()
+    window.geometry('700x500')
+    window.maxsize(700, 500)
+    window.title('Portofolio Optimization')
+    labelmain = Label(window, text= 'Welcome to our portofolio optimization programme')
+    labelmain.pack()
+    labelinf = Label(window, text = 'Examples of the assests are : test test test test')
+    labelinf.place(relx = .3333, rely=.1)
+    input1=Text(window, height=1, width=40)
+    input1.place(relx = .5, rely=.2)
+    label01 = Label(window, text = 'Please Enter the first input - assets:')
+    label01.place(relx = .1, rely=.2)
+    labelinf2 = Label(window, text = 'Examples of the money_to_be_invested are : test test test test')
+    labelinf2.place(relx = .3333, rely=.3)
+    input2=Text(window, height=1, width=40)
+    input2.place(relx = .5, rely=.4)
+    label02 = Label(window, text = 'Please Enter the seocnd input - money_to_be_invested:')
+    label02.place(relx = .08, rely=.4)
+    #If it gave error try to put prackects after implement like this --> implement()
+    but = Button(window, text="Start", command= implement)
+    but.place(x=0, y=0)
+    text = Text(window)
+    text.place(rely = .5, relx=.05)
+    # sample_optimisation.knapsack_implementation()
+    window.mainloop()
+
+gui()
