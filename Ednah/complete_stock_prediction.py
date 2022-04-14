@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import pandas_datareader as web
 import datetime as dt
+from tkinter import *
 
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
@@ -25,12 +26,13 @@ Stock doesn't trade every day (there is no trading on weekends and holidays), so
 """
 
 
-def stock_price_prediction():
+def stock_price_prediction(comp):
 
     viable_companies = ['FB', 'AMZN', 'AAPL', 'NFLX', 'GOOG']
     while True:
         #to make user's input resemble the options we have
-        company = input("Enter the company you want to see tomorrow's price prediction: ").replace(" ", "").upper()
+        # company = input("Enter the company you want to see tomorrow's price prediction: ").replace(" ", "").upper()
+        company = comp.replace(" ", "").upper()
         if company not in viable_companies:
             print("Please choose a company among the following:")
             print(f'{viable_companies}')
@@ -132,7 +134,43 @@ def stock_price_prediction():
 
     prediction = model.predict(real_data)
     prediction = scaler.inverse_transform(prediction)
-    print(f"predicted price: {prediction[0][0]}")
+    return f"predicted price: {prediction[0][0]}"
 
 
-stock_price_prediction()
+# stock_price_prediction()
+
+
+def gui():
+
+    def implement():
+        input1Value=input1.get("1.0","end-1c")
+        result = stock_price_prediction(input1Value)
+
+        
+        try:
+            text.insert(INSERT, result)
+        except BaseException as error:
+            print(error)
+            print (result)
+
+    window = Tk()
+    window.geometry('700x500')
+    window.maxsize(700, 500)
+    window.title('Stock Prediction')
+    labelmain = Label(window, text= 'Welcome to our Price Prediction programme')
+    labelmain.pack()
+    labelinf = Label(window, text = 'Examples of the required input : test test test test')
+    labelinf.place(relx = .3333, rely=.1)
+    input1=Text(window, height=1, width=40)
+    input1.place(relx = .5, rely=.2)
+    label01 = Label(window, text = 'Please Enter the first input - assets:')
+    label01.place(relx = .1, rely=.2)
+    #If it gave error try to put prackects after implement like this --> implement()
+    but = Button(window, text="Start", command= implement)
+    but.place(x=0, y=0)
+    text = Text(window)
+    text.place(rely = .5, relx=.05)
+    # sample_optimisation.knapsack_implementation()
+    window.mainloop()
+
+gui()

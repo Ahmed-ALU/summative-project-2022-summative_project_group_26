@@ -182,9 +182,7 @@ def gui():
         sample_optimisation=portfolio_optimization(input1Value, input2Value)
         result1 = sample_optimisation.full_list_of_companies()
         sample_optimisation.stock_optimisation_trial_graph()
-        result2 = sample_optimisation.portfolio_optimisation()
-        sample_optimisation.gui()
-        
+        result2 = sample_optimisation.portfolio_optimisation()        
         try:
             text.insert(INSERT, result2)
         except BaseException as error:
