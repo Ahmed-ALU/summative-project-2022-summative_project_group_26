@@ -13,7 +13,7 @@
 4. Ahmed Mohamed
 5. Jeremiah Ater
 
-
+**Link to Video Description of the project:** https://www.youtube.com/watch?v=AHGNopuzwF0
 
 **Application Name**
 MAAT STOCK OPTIMISATION SYSTEM
