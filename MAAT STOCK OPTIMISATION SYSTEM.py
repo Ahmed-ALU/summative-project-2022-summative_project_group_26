@@ -1,11 +1,9 @@
-#!/usr/bin/python3
 import tkinter as tk
 import tkinter.ttk as ttk
 
 from pandas import DataFrame
 from tkinter import NW
 
-#from portfolio_optimisation3 import *
 import yfinance as yf
 import pandas as pd
 from datetime import datetime
@@ -13,13 +11,20 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,NavigationToolbar2Tk)
 from matplotlib.figure import Figure
 from PIL import Image,ImageTk
+import numpy as np
+import pandas_datareader as web
+import datetime as dt
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, LSTM
+
 
 global bar1
 global z
 z=str()
 
 
-class PygubuWorksCopyApp:
+class MAAT_STOCK_OPTIMISATION_SYSTEM:
     def __init__(self, master=None):
         self.stocks_and_limits = {'FB': 200, 'AMZN': 50, 'AAPL': 70, 'NFLX': 80, 'GOOG': 120}
         self.stock_owning_limit=2000
@@ -28,83 +33,47 @@ class PygubuWorksCopyApp:
         self.asset=[]
         self.assets=[]
         self.all_stocks = pd.DataFrame()
-
-        # build ui
-        #Initiating the top level
-
         self.toplevel1 = tk.Toplevel(master, container="false")
         self.toplevel1.configure(borderwidth="10", relief="flat", takefocus=True)
         self.toplevel1.overrideredirect("False")
         self.toplevel1.title("STOCK OPTIMISER")
         self.toplevel1.maxsize(1200, 600)
         self.toplevel1.minsize(1200, 600)
-        
-        # Main Title on the screen 
         self.label9 = ttk.Label(self.toplevel1)
         self.label9.configure(
             background="#4B9CD3",
             font="{@HP Simplified Jpan} 24 {}",
             foreground="white",
             justify="center",
-            # relief="sunken",
-            # takefocus=True,
             padding= "7 3",
-            # width= "Y",
             text="MAAT STOCK/PORTFOLIO OPTIMISATION SYSTEM")
-        # self.label9.grid(column="1", row="0")
-        # self.label9.pack()
         self.label9.grid(column=0, row=0, columnspan=6)
 
         self.inp = ttk.Label(self.toplevel1)
         self.inp.configure(text="----------------------------INPUTs--------------------------------", font= 'Bold 15')
-        # self.inp.place(rely=.1, relx= .05)
         self.inp.grid(columnspan= 2, column=0, row=1)
-
-        # self.dash = ttk.Label(self.toplevel1)
-        # self.dash.configure(text="------------------------------------------------------", font= 'Bold 10')
-        # self.dash.place(rely=.1, relx= .01)
-
         self.label10 = ttk.Label(self.toplevel1)
         self.label10.configure(
             font="TkTextFont", justify="right", padding="0", takefocus=False)
         self.label10.configure(text="ENTER THE STOCK TO INVEST: ", width="30")
-        # self.label10.place(rely=.19, relx= .05)
         self.label10.grid(column= 0, row = 2)
         self.label10.configure(font='30')
-        # self.label10.grid(
-        #     column="0",
-        #     columnspan="3",
-        #     padx="10",
-        #     pady="30",
-        #     row="3",
-        #     rowspan="3",
-        #     sticky="w",
-        # )
-
         self.entry2 = ttk.Entry(self.toplevel1)
         self.entry2.grid(column=1, row=2)
-        # self.entry2.place(rely=.19, relx= .3)
-
 
         self.label14 = ttk.Label(self.toplevel1)
         self.label14.configure(text="ENTER AMOUT TO INVEST: ")
-        # self.label14.place(rely=.27, relx= .05)
         self.label14.configure(font='30')
         self.label14.grid(row=3, column=0)
 
         self.entry4 = ttk.Entry(self.toplevel1)
         self.entry4.grid(row=3, column=1)
-        
-        # self.entry4.place(rely=.27, relx= .3)
-
         self.inpG = ttk.Label(self.toplevel1)
         self.inpG.configure(text="-----------------------------------------------------------------Graphs----------------------------------------------------", font= 'Bold 15', justify='left')
-        # self.inp.place(rely=.5, relx= .05)
         self.inpG.grid(row=4, column=0, columnspan=6)
 
         self.inpS = ttk.Label(self.toplevel1)
         self.inpS.configure(text= "        ", font= 'Bold 15')
-        # self.inp.place(rely=.5, relx= .05)
         self.inpS.grid(row=1, column=2, rowspan=3)
         
 
@@ -113,75 +82,56 @@ class PygubuWorksCopyApp:
         self.inp2 = ttk.Label(self.toplevel1)
         self.inp2.configure(text="----------------------------Outputs--------------------------------", font= 'Bold 15')
         self.inp2.grid(column=3, row=1, columnspan=3)
-        # self.inp.place(rely=.1, relx= .5)
+
 
 
         self.label13 = ttk.Label(self.toplevel1)
         self.label13.configure(text="PORTFOLIO \nPERFOMANCE", justify='center', font='Normal 11')
-        # self.label13.place(rely=.15, relx= .5, width=120)
         self.label13.grid(column=3, row=2)
-        # self.label13.grid(column="2", padx="10", pady="30", row="5", sticky="e")
 
         self.message1 = tk.Message(self.toplevel1)
         self.message1.configure(relief="sunken", takefocus=True, background='white')
         self.message1.grid(column=3, row=3)
-        # self.message1.place(rely=.25, relx= .5, width=120, height=100)
-        # self.message1.grid(column="2", row="6", sticky="e")
+
 
         self.label18 = ttk.Label(self.toplevel1)
         self.label18.configure(text="PREDICTED \nPRICES", justify='center', font='Normal 11')
         self.label18.grid(column=4, row=2)
-        # self.label18.place(rely=.15, relx= .66, width=120)
-        # self.label18.grid(column="0", padx="20", row="5", sticky="e")
+
 
 
         self.entry6 = tk.Entry(self.toplevel1)
         self.entry6.configure(relief="sunken", takefocus=True, background='white')
         self.entry6.grid(column=4, row=3)
-        # self.entry5.place(rely=.28, relx= .65, width=120, height=30)
-        # self.message1.grid(column="2", row="6", sticky="e")
+
 
 
         self.label20 = ttk.Label(self.toplevel1)
         self.label20.configure(text="MAXIMUM \nPROFIT", justify='center', font='Normal 11')
         self.label20.grid(column=5, row=2)
-        # self.label20.place(rely=.15, relx= .82, width=120)
-        # self.label20.grid(column="0", padx="20", row="5", sticky="e")
+
 
 
         self.entry8 = tk.Entry(self.toplevel1)
         self.entry8.configure(relief="sunken", takefocus=True, background='white')
         self.entry8.grid(column=5, row=3)
-        # self.entry8.place(rely=.28, relx= .80, width=120, height=30)
-        # self.entry8.grid(column="2", row="6", sticky="e")
-
 
 
         self.button1 = ttk.Button(self.toplevel1)
         self.button1.configure(text="OPTIMISE",command=self.portfolio)
-        # self.button1.configure(text="OPTIMISE")
         self.button1.grid(column=5, row=6, columnspan=6)
-        # self.button1.grid(column="0", pady="10", row="7")
 
 
         self.label15 = ttk.Label(self.toplevel1)
         self.label15.configure(text="STOCK PRICES SINCE 2013", font='Normal 12')
-        # self.label15.place(rely=.55, relx= .15, width=290)
-        # self.label15.grid(column="0", padx="10", row="8", sticky="w")
         self.label15.grid(column=0, row=5, columnspan=2)
 
         self.canvas2 = tk.Canvas(self.toplevel1)
         self.canvas2.configure(height="300", width="290", background='white')
         self.canvas2.grid(column=0, row=6, columnspan=2)
-        # self.canvas2.place(rely=.6, relx= .1, width=290)
-        # self.canvas2.grid(column="0", padx="10", pady="10", row="9", sticky="w")
-
-
 
         self.label16 = ttk.Label(self.toplevel1)
         self.label16.configure(relief="flat", text="STOCK PREDICTION", font='Normal 12')
-        # self.label16.place(rely=.55, relx= .5, width=250)
-        # self.label16.grid(column="0", row="8", sticky="e")
         self.label16.grid(column=2, row=5, columnspan=2)
 
 
@@ -191,28 +141,14 @@ class PygubuWorksCopyApp:
         )
         self.canvas3.grid(column=2, row=6, columnspan=2)
 
-        # self.canvas3.place(rely=.6, relx= .45, width=290)
-        # self.canvas3.grid(column="0", row="9", sticky="e")
-
-
-        
         self.label19 = ttk.Label(self.toplevel1)
         self.label19.configure(text="PREFERABLE STOCKS", font='Normal 11')
-        # self.label19.place(rely=.55, relx= .8, width=170)
-        # self.label19.grid(column="1", row="8", sticky="n")
         self.label19.grid(column=5, row=4)
 
 
         self.entry7 = tk.Entry(self.toplevel1)
         self.entry7.configure(relief="sunken", takefocus=True, background='white')
         self.entry7.grid(column=5, row=5)
-        # self.entry7.place(rely=.6, relx= .8, width=170, height=30)
-
-        
-        
-        
-
-        # Main widget
         self.mainwindow = self.toplevel1
     def run(self):
         self.mainwindow.mainloop()
@@ -221,15 +157,8 @@ class PygubuWorksCopyApp:
         import pandas as pd
         import matplotlib.pyplot as plt
         self.assets.append(self.entry2.get())
-        #print(self.assets)
-
-        #stocksStartDate = '2013-01-01'
-        #today = datetime.today().strftime('%Y-%m-%d')
-        #self.all_stocks = pd.DataFrame()
-
         stocksStartDate = '2013-01-01'
         today = datetime.today().strftime('%Y-%m-%d')
-        #self.all_stocks = pd.DataFrame()
         v=set(self.assets)
         self.assets=list(v)
 
@@ -241,46 +170,16 @@ class PygubuWorksCopyApp:
                 tmp_close = yf.download(symbol,start=stocksStartDate,end=today,progress=False)['Close']
                 self.all_stocks = pd.concat([self.all_stocks, tmp_close], axis=1)
 
-        #print(self.all_stocks)
         self.all_stocks.columns = self.asset
-        #print(self.all_stocks)
-        #import matplotlib.pyplot as plt
-        #import matplotlib
-        # from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-
-        # matplotlib.use('TkAgg')
-        title = 'portfolio Adj. Close Price History'
-        # fig, ax = plt.subplots()
-        # plt.switch_backend('TkAgg')
-
         for c in self.all_stocks.columns.values:
-                # plt.switch_backend('TkAgg')
             plt.plot(self.all_stocks[c], label=c)
         figure1 = plt.Figure(figsize=(2.8, 3.2), dpi=100)
         ax1 = figure1.add_subplot(111)
         bar1 = FigureCanvasTkAgg(figure1, self.canvas2)
         bar1.get_tk_widget().grid(column="0", padx="10", pady="10", row="9", sticky="w")
-        # df1 = df1[['Country','GDP_Per_Capita']].groupby('Country').sum()
         self.all_stocks.plot(kind='line', legend=True, ax=ax1)
         ax1.set_title('portfolio Adj. Close Price History')
 
-        #
-        # plt.title(title)
-        # plt.xlabel('Date', fontsize=20)
-        # plt.ylabel('Adj.price USD ($)', fontsize=20)
-        # plt.legend(self.all_stocks.columns.values, loc='upper left')
-        # v=plt.show()
-        # #img = ImageTk.PhotoImage(Image.open(v))
-        # #self.canvas3.create_image(10, 10, anchor=NW, image=img)
-        import numpy as np
-        import matplotlib.pyplot as plt
-        import pandas as pd
-        import pandas_datareader as web
-        import datetime as dt
-
-        from sklearn.preprocessing import MinMaxScaler
-        from tensorflow.keras.models import Sequential
-        from tensorflow.keras.layers import Dense, Dropout, LSTM
 
         viable_companies = ['FB', 'AMZN', 'AAPL', 'NFLX', 'GOOG']
         while True:
@@ -292,7 +191,6 @@ class PygubuWorksCopyApp:
                 print(f'{viable_companies}')
             else:
                 break
-        # when to start the data
         start = dt.datetime(2013, 1, 1)
         end = dt.datetime(2020, 1, 1)
         data = web.DataReader(company, 'yahoo', start, end)
@@ -369,28 +267,10 @@ class PygubuWorksCopyApp:
         predicted_prices = scaler.inverse_transform(predicted_prices)
 
         # plot the test predictions
-        # plt.plot(actual_price, color='blue', label=f"Actual {company} Price")
-        # plt.plot(predicted_prices, color='green', label=f"Predicted {company} Price")
-        #
-        # plt.title(f"{company} Share Price")
-        # plt.xlabel('Time')
-        # plt.ylabel(f'{company} Share Price')
-        # plt.legend()
-        # plt.show()
+
         g=["actual price", "predicted prices"]
-        #df2=pd.DataFrame()
-        data={}
         datas={"actual_price":actual_price, "predicted_prices":predicted_prices}
         df2=DataFrame(datas,columns=["actual_price","Predicted_prices"])
-        ##
-        # df2.columns=g
-        # for c in df2.columns.values:
-        #         # plt.switch_backend('TkAgg')
-        #     plt.plot(df2[c], label=c)
-        #
-
-
-
 
         figure2 = plt.Figure(figsize=(2.8, 3.2), dpi=100)
         ax2 = figure2.add_subplot(111)
@@ -437,8 +317,6 @@ class PygubuWorksCopyApp:
         S="Sharpe Ratio:    {:.2f}\n".format(ef.portfolio_performance(verbose=True)[2])
 
 
-        # st.dataframe(ef.portfolio_performance(verbose=True))
-
         from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
         latest_prices = get_latest_prices(self.all_stocks)
 
@@ -478,7 +356,6 @@ class PygubuWorksCopyApp:
 
         max_value = K[n][W]
         self.entry8.insert(0, max_value)
-        #print("p:",max_value)
         w = W
         for i in range(n, 0, -1):
             if max_value <= 0:
@@ -490,9 +367,7 @@ class PygubuWorksCopyApp:
                 max_value = max_value - val[i - 1]
                 w = w - wt[i - 1]
 
-        #return max_value
-
 
 if __name__ == "__main__":
-    app = PygubuWorksCopyApp()
+    app =MAAT_STOCK_OPTIMISATION_SYSTEM()
     app.run()
