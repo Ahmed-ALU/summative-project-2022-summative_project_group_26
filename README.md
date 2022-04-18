@@ -1,6 +1,5 @@
 # Final-Jan-April-2022
-**
-Data Structures and Algorithms
+**Data Structures and Algorithms
 
 Peer Group 26
 
@@ -44,8 +43,13 @@ Python libraries to install include:
 
 **Instructions: How to use the program**
 
+
+
 Ensure you have Python and an Integrated Development environment(IDE) installed.
 Install all the necessary python libraries (listed above) before running the program.
+
+**MAAT_STOCK_OPTIMIZATION_SYSTEM.py is the main file. This is the file you will need to start the application**
+
 When you click on run on your IDE, a Graphical User interface (GUI) will appear.
 
 The User Interface partitioned into three visible parts:
@@ -71,7 +75,8 @@ Next, enter the amount of money you want to invest in under the “ENTER AMOUNT 
 
 Thereafter, click on the OPTIMISE button. 
 
-At this stage, please note that the prediction model will run for approximately 2-3 minutes. This is because the model gets trained using the previous data related to the asset/company you have chosen in order to give the user a prediction that is well informed
+**At this stage, please note that the prediction model will run for approximately 2-3 minutes**. This is because the model gets trained using the previous data related to the asset/company you have chosen in order to give the user a prediction that is well informed. **During this time, the GUI will stay without activity for about 2-3 minutes**
+
 Results will be displayed in the specific Output areas. 
 
 You may change the input values and try other values for as many times as you please
