@@ -1,18 +1,19 @@
 # Final-Jan-April-2022
-**Data Structures and Algorithms
 
-Peer Group 26
+**Data Structures and Algorithms**
 
-Summative Project Documentation**
+**Peer Group 26**
+
+**Summative Project Documentation**
 
 **MEMBERS**
-Samuel Wanza
-Myra Lugwiri
-Ednah Akoth
-Ahmed Mohamed
-Jeremiah Ater
+1. Samuel Wanza
+2. Myra Lugwiri
+3. Ednah Akoth
+4. Ahmed Mohamed
+5. Jeremiah Ater
 
-
+**Link to Video Description of the project:** https://www.youtube.com/watch?v=AHGNopuzwF0
 
 **Application Name**
 MAAT STOCK OPTIMISATION SYSTEM

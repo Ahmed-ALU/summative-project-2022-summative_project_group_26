@@ -61,7 +61,7 @@ class PygubuWorksCopyApp:
         self.inp.grid(columnspan=2, column=0, row=1)
 
         # self.dash = ttk.Label(self.toplevel1)
-        # self.dash.configure(text="------------------------------------------------------", font= 'Bold 10')
+        # self.dash.configure(text="-----------------------------------------------------", font= 'Bold 10')
         # self.dash.place(rely=.1, relx= .01)
 
         self.label10 = ttk.Label(self.toplevel1)
