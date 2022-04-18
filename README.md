@@ -1,6 +1,5 @@
 # Final-Jan-April-2022
-**
-Data Structures and Algorithms
+**Data Structures and Algorithms
 
 Peer Group 26
 
