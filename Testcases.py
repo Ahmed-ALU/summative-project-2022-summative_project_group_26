@@ -20,15 +20,11 @@ class TestMAAT_STOCK_OPTIMISATION_SYSTEM(unittest.TestCase):
         self.assertTrue(App,True)
     def test_portfolio(self):
         App=MAAT_STOCK_OPTIMISATION_SYSTEM()
-        App.assets.append("GOOG")
-
+        self._start_app()
+        App.entry2.insert(0,"FB")
         k=App.portfolio()
         self.assertTrue(k,True)
-
-
-
-
-
+        self._start_app()
 
 
 if __name__ == "__main__":

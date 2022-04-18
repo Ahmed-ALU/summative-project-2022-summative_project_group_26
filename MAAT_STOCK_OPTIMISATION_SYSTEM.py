@@ -404,29 +404,31 @@ class MAAT_STOCK_OPTIMISATION_SYSTEM:
 
         from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
         latest_prices = get_latest_prices(self.all_stocks)
+
         try:
             entry_for_amount = int(self.entry4.get())
+            allocation_of_funds = DiscreteAllocation(cleaned_weights, latest_prices,
+                                                     total_portfolio_value=entry_for_amount)
+            allocation, leftover = allocation_of_funds.lp_portfolio()
+
+            companies = []
+            number_of_stocks = []
+            for company, no_of_stocks in allocation.items():
+                companies.append(company)
+                number_of_stocks.append(no_of_stocks)
+            optimized_assets = {"company": companies, "number of stocks": number_of_stocks}
+            z = E, A, S, pd.DataFrame(optimized_assets)
+            self.message1.configure(text=z)
+            weight_limits = []
+            for item in self.asset:
+                if item in self.stocks_and_limits.keys():
+                    weight_limits.append(self.stocks_and_limits[item])
+            self.knapsack_algorithm(self.stock_owning_limit, weight_limits, latest_prices, len(self.asset))
+            self.entry7.insert(0, self.b)
+
         except ValueError:
             self.entry4.insert(0, "Please enter an integer")
 
-        allocation_of_funds = DiscreteAllocation(cleaned_weights, latest_prices,
-                                                 total_portfolio_value=entry_for_amount)
-        allocation, leftover = allocation_of_funds.lp_portfolio()
-
-        companies = []
-        number_of_stocks = []
-        for company, no_of_stocks in allocation.items():
-            companies.append(company)
-            number_of_stocks.append(no_of_stocks)
-        optimized_assets = {"company": companies, "number of stocks": number_of_stocks}
-        z = E, A, S, pd.DataFrame(optimized_assets)
-        self.message1.configure(text=z)
-        weight_limits = []
-        for item in self.asset:
-            if item in self.stocks_and_limits.keys():
-                weight_limits.append(self.stocks_and_limits[item])
-        self.knapsack_algorithm(self.stock_owning_limit, weight_limits, latest_prices, len(self.asset))
-        self.entry7.insert(0, self.b)
         return True
 
     def knapsack_algorithm(self, owning_limit, weight_limit, val_prices, num_assests):
