@@ -1,10 +1,10 @@
 # Final-Jan-April-2022
 
-****Data Structures and Algorithms**
+**Data Structures and Algorithms**
 
-**Peer Group 26******
+**Peer Group 26**
 
-**Summative Project Documentation****
+**Summative Project Documentation**
 
 **MEMBERS**
 1. Samuel Wanza
