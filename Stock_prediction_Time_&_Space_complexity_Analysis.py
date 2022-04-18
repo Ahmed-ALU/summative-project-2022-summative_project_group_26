@@ -484,10 +484,10 @@ class PygubuWorksCopyApp:
                     # determining the time complexity of this code.
                     # the first two for loops run as independent loops. Therefore, the first loop runs (w+1)n times
                     # and the other one runs (n+1)n times. If we combine the two, we would get, (w+1)n + (n+1)n.
-                    # So we ignore the constants (w+1) and (n+1). This give us O(n^2)
-                    # We also have a nested loop where the outer one runs O(n) times and the inner one that runs O(n^2)
+                    # So we ignore the constants (w+1) and (n+1). This give us O(n)
+                    # We also have a nested loop where the outer one runs O(n) times and the inner one that runs O(n)
                     # an overall time complexity of the nested loop is O(n^2), if we would then combine all the loops
-                    # Therefore, time complexity of these loops is constant O(N^4)
+                    # Therefore, time complexity of these loops is constant O(N^2)
                     # This is because the loop is a simple loop with several number of iterations
                     #                SPACE COMPLEXITY
                     # Here, the space taken by the list K is equal to 4n bytes where n is the length of the list
